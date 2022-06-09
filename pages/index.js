@@ -11,7 +11,7 @@ export default function Home() {
 		refetchOnWindowFocus: false
 	});
 
-	console.log(isLoading);
+	// console.log(isLoading);
 
 	// isLoading && <p>Loading...</p>;
 
@@ -38,7 +38,7 @@ export default function Home() {
 					alt="patch-image"
 					width={500}
 					height={500}
-					priority
+					// priority
 				/>
 			</main>
 		</div>
