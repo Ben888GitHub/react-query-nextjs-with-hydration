@@ -2,23 +2,20 @@ import Head from 'next/head';
 
 import styles from '../styles/Home.module.css';
 import { dehydrate, QueryClient, useQuery } from 'react-query';
-import { fetchPosts } from '../api';
-import Link from 'next/link';
-
-export const getStaticProps = async () => {
-	const queryClient = new QueryClient();
-
-	await queryClient.prefetchQuery('posts', fetchPosts);
-	// const dehydratedState = dehydrate(queryClient);
-	return {
-		props: {
-			dehydratedState: dehydrate(queryClient)
-		}
-	};
-};
+import { getSpaceXData } from '../api';
+import Image from 'next/image';
 
 export default function Home() {
-	const { data } = useQuery('posts', fetchPosts);
+	// this query is now fetching the pre-fetched cached data from your getStaticProps()
+	const { data, isLoading } = useQuery('spacex', getSpaceXData, {
+		refetchOnWindowFocus: false
+	});
+
+	console.log(isLoading);
+
+	// isLoading && <p>Loading...</p>;
+
+	// error && <p>Error!</p>;
 
 	return (
 		<div className={styles.container}>
@@ -32,17 +29,34 @@ export default function Home() {
 				<h1 className={styles.title}>
 					NextJs React Query with Dehydrated State
 				</h1>
+
 				<br />
-				{data &&
-					data?.map((post) => (
-						<div key={post.id}>
-							<Link href={`/${post.id}`}>{post.title}</Link>
-							{/* <h3>{post.title}</h3> */}
-							<br />
-							<br />
-						</div>
-					))}
+				<h2>{data?.name}</h2>
+
+				<Image
+					src={data.links.patch.large}
+					alt="patch-image"
+					width={500}
+					height={500}
+					priority
+				/>
 			</main>
 		</div>
 	);
 }
+
+export const getStaticProps = async () => {
+	const queryClient = new QueryClient();
+
+	// prefetch the data
+	await queryClient.prefetchQuery('spacex', getSpaceXData);
+
+	// console.log(pageData);
+
+	return {
+		props: {
+			// dehydrate the getSpaceXData API inside queryClient
+			dehydratedState: dehydrate(queryClient)
+		}
+	};
+};
