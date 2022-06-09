@@ -7,7 +7,7 @@ import Image from 'next/image';
 
 export default function Home() {
 	// this query is now fetching the pre-fetched cached data from your getStaticProps()
-	const { data, isLoading } = useQuery('spacex', getSpaceXData, {
+	const { data } = useQuery('spacex', getSpaceXData, {
 		refetchOnWindowFocus: false
 	});
 
@@ -32,6 +32,8 @@ export default function Home() {
 
 				<br />
 				<h2>{data?.name}</h2>
+				<h2>{data?.flight_number}</h2>
+				<h2>{data?.date_utc}</h2>
 
 				<Image
 					src={data.links.patch.large}
